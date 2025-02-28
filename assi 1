@@ -1,0 +1,164 @@
+class Customer: 
+    """ 
+    Represents a customer in the delivery system. 
+     
+    Attributes: 
+        name (str): Customer's full name. 
+        contact (str): Customer's contact number.  
+        address (str): Delivery address. 
+    """     
+    def __init__(self, name, contact, address): 
+        self.__name = name  
+        self.__contact = contact  
+        self.__address = address 
+ 
+    # Getter methods     
+    def get_name(self):         
+        return self.__name 
+ 
+    def get_contact(self):         
+        return self.__contact 
+ 
+    def get_address(self):         
+        return self.__address 
+ 
+    # Setter methods     
+    def set_contact(self, contact):         
+        self.__contact = contact 
+ 
+    def set_address(self, address):         
+        self.__address = address 
+ 
+    def place_order(self, order_id, items, delivery_method):         
+        """Creates a new order for the customer."""         
+        return Order(order_id, self, items, delivery_method) 
+
+
+class Item: 
+    """ 
+    Represents an item in an order. 
+ 
+    Attributes: 
+        item_code (str): Unique code for the item.  
+        description (str): Description of the item.  
+        quantity (int): Quantity of the item ordered.  
+        unit_price (float): Price per unit of the item. 
+    """ 
+    def __init__(self, item_code, description, quantity, unit_price): 
+        self.__item_code = item_code  
+        self.__description = description  
+        self.__quantity = quantity  
+        self.__unit_price = unit_price 
+ 
+    # Getter methods     
+    def get_item_code(self):         
+        return self.__item_code 
+ 
+    def get_description(self):         
+        return self.__description 
+ 
+    def get_quantity(self):         
+        return self.__quantity 
+ 
+    def get_unit_price(self):         
+        return self.__unit_price 
+ 
+    def get_total_price(self): 
+        """Calculates total price for the item."""         
+        return self.__quantity * self.__unit_price 
+ 
+    # Setter method 
+    def set_quantity(self, quantity): 
+        if quantity > 0: 
+            self.__quantity = quantity 
+        else: 
+            raise ValueError("Quantity must be positive") 
+
+
+class Order: 
+    """ 
+    Represents a delivery order. 
+     
+    Attributes: 
+        order_id (int): Unique identifier for the order.  
+        customer (Customer): The customer who placed the order.  
+        items (list): List of items in the order. 
+        delivery_method (str): Delivery method (e.g., Courier, Express).  
+        status (str): Current status of the order. 
+    """ 
+    def __init__(self, order_id, customer, items, delivery_method): 
+        self.__order_id = order_id  
+        self.__customer = customer  
+        self.__items = items 
+        self.__delivery_method = delivery_method  
+        self.__status = "Pending"  
+        self.__subtotal = sum(item.get_total_price() for item in items)  
+        self.__taxes_and_fees = self.__subtotal * 0.05  # Assuming 5% tax  
+        self.__total_amount = self.__subtotal + self.__taxes_and_fees 
+ 
+    # Getter methods     
+    def get_order_id(self):         
+        return self.__order_id     
+        
+    def get_customer(self):         
+        return self.__customer 
+ 
+    def get_items(self):         
+        return self.__items 
+ 
+    def get_delivery_method(self):         
+        return self.__delivery_method 
+ 
+    def get_status(self):         
+        return self.__status 
+ 
+    def get_subtotal(self):         
+        return self.__subtotal 
+ 
+    def get_taxes_and_fees(self):         
+        return self.__taxes_and_fees 
+ 
+    def get_total_amount(self):         
+        return self.__total_amount 
+ 
+    def print_order_details(self): 
+        """ 
+        Prints the details of an order. 
+        """ 
+        customer = self.get_customer()     
+        print(f"Order ID: {self.get_order_id()}")     
+        print(f"Customer Name: {customer.get_name()}")     
+        print(f"Contact: {customer.get_contact()}")     
+        print(f"Address: {customer.get_address()}")     
+        print(f"Delivery Method: {self.get_delivery_method()}")     
+        print(f"Status: {self.get_status()}") 
+     
+        print("\nItems:")     
+        for item in self.get_items(): 
+            print(f"Item Code: {item.get_item_code()} | Description: {item.get_description()} | "
+                  f"Quantity: {item.get_quantity()} | Unit Price: {item.get_unit_price()} AED | "
+                  f"Total Price: {item.get_total_price()} AED") 
+     
+        print(f"\nSubtotal: {self.get_subtotal()} AED")     
+        print(f"Taxes and Fees: {self.get_taxes_and_fees()} AED")     
+        print(f"Total Amount: {self.get_total_amount()} AED\n") 
+
+
+# Define the customer 
+customer = Customer("Sarah Johnson", "sarah.johnson@example.com", "45 Knowledge Avenue, Dubai, UAE") 
+ 
+# Create 4 items  
+item1 = Item("ITM001", "Wireless Keyboard", 1, 100.00)  
+item2 = Item("ITM002", "Wireless Mouse & Pad Set", 1, 75.00)  
+item3 = Item("ITM003", "Laptop Cooling Pad", 1, 120.00)  
+item4 = Item("ITM004", "Camera Lock", 3, 15.00)  
+ 
+# Create 5 orders, each with 4 items  
+orders = []  
+for i in range(1, 6): 
+    order = customer.place_order(f"DEL1234567{i}", [item1, item2, item3, item4], "Courier")     
+    orders.append(order) 
+ 
+# Print the details of all 5 orders  
+for order in orders: 
+    order.print_order_details()
